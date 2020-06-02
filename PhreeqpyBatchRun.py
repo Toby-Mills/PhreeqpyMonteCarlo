@@ -5,6 +5,7 @@ from os import walk
 
 #-----------Setttings-----------------#
 #------- Edit as needed --------------#
+phreeq_database = r"C:\\Temp\\PhreeqpyMonteCarlo\\phreeqc.dat"
 input_file_folder = r"C:\\Temp\\PhreeqpyMonteCarlo\\input\\"
 
 output_file_folder = r"C:\\Temp\\PhreeqpyMonteCarlo\\output\\"
@@ -38,15 +39,15 @@ def load_input_file_names():
 
 #-----------Phreeq Methods-------------------------------
 def execute_input_file(input_file_name, output_file_name):
-       
+    global phreeq_database
+
     phreeqc = phreeqc_module.IPhreeqc()
     phreeqc.create_iphreeqc()
-    phreeqc.load_database(r"C:\Temp\PhreeqpyMonteCarlo\phreeqc.dat")
+    phreeqc.load_database(phreeq_database)
     input_file = open(input_file_name,"r")
     input_string =input_file.read()
     input_file.close()
     phreeqc.run_string(input_string)
-    components = phreeqc.get_component_list()
                             
     output = phreeqc.get_selected_output_array()
     output_file = open(output_file_name, "x")
