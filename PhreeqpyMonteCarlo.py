@@ -8,15 +8,11 @@ import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
 
 #-----------Setttings-----------------#
 #------- Edit as needed --------------#
-template_file_name = r"C:\Users\meris\Dropbox\Mills Water\Clients\GCS\Tizert\Models\Test\\"
+template_file_name = r"C:\\Temp\\PhreeqpyMonteCarlo\\template.pqi"
 
-input_file_directory = ""
-input_file_name = ""
-input_file_extension = ""
-
-output_file_directory = ""
-output_file_name = ""
-output_file_extension = ""
+generated_file_directory = r"C:\\Temp\\PhreeqpyMonteCarlo\\input\\"
+generated_file_name = "model_name_"
+generated_file_extension = "pqi"
 
 
 #-----------Constants-----------------
@@ -262,10 +258,9 @@ def generate_tag_replacement_number_triangle(tag):
 
 
 #---------------MAIN-------------------
+load_template()
 for count in range(10):
-    new_input_file = monte_carlo(r"""
-porosity: <<porosity|number|uniform|mean:0.3|stddev:0.43|decimals:2|min:0|max:1>> percent.
-infiltration rate: <<infiltration|number|normal|mean:0.6|stddev:0.23|decimals:2|min:0|max:1>> percent.
-rainfall: <<rainfall|number|triangle|decimals:4|mode:142.34|left:70|right:170|>> mm/year
-flow rate: <<flow rate|product|infiltration|rainfall|porosity|decimals:1>> mm/year""")
-    print(new_input_file)    
+    new_file_content = monte_carlo(template_content)
+    new_file = create_new_file(generated_file_directory + generated_file_name + "%d" % count + "." + generated_file_extension)
+    new_file.write(new_file_content)
+    new_file.close()
