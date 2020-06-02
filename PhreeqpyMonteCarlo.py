@@ -1,0 +1,271 @@
+#----------Imports-------------------
+from random import seed
+from random import random
+import numpy
+from numpy.random import default_rng
+import re
+import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
+
+#-----------Setttings-----------------#
+#------- Edit as needed --------------#
+template_file_name = r"C:\Users\meris\Dropbox\Mills Water\Clients\GCS\Tizert\Models\Test\\"
+
+input_file_directory = ""
+input_file_name = ""
+input_file_extension = ""
+
+output_file_directory = ""
+output_file_name = ""
+output_file_extension = ""
+
+
+#-----------Constants-----------------
+NULL = -9999
+
+
+#-----------Variables-----------------
+tags = []
+template_content = ""
+generated_input_files = []
+generated_output_files = []
+
+
+#-----------Class Tag-----------------
+class Tag:
+    name = r""
+    text = r""
+    parts = []
+    replacement_text = r""
+    value = NULL
+    
+    def set_string(self, string):
+        self.text = string
+        temporary_text = string.split(r"<<")[1].split(r">>")[0]
+        self.parts = temporary_text.split(r"|")
+        self.name = self.parts.pop(0)
+        
+#------------Number Methods------------------------
+def between(number, minimum, maximum):
+    if minimum != NULL:
+        if number < minimum:
+            return False
+    if maximum != NULL:
+        if number > maximum:
+            return False
+
+    return True
+        
+#------------Stats Methods------------------------
+def Random_Triangular_Value(Left, Mode, Right):
+    Random_Triangular_Variable = numpy.random.default_rng().triangular(Left,Mode,Right,1)
+    return Random_Triangular_Variable
+
+#-----------String Methods-------------------------------
+def format_number(number, decimals):
+    if decimals != NULL:
+        format_string = r"%." + str(decimals) +r"f"
+    else:
+        format_string = r"%f"
+    formatted_number = format_string % number
+    
+    return(formatted_number)
+
+#-----------File Methods-------------------------------
+def write_line(open_file, text):
+    open_file.write(text)
+    open_file.write("\n")
+
+def create_new_file(file_name):
+    file = open(file_name,"x")
+    return file   
+
+
+#------------Template & Tag Methods------------------------
+def monte_carlo(template_text):
+    global tags
+    
+    tags = []
+    load_tags(template_text)
+    generate_tags_replacement_text()
+    result = replace_tags_text(template_text)
+
+    return(result)
+
+def load_template():
+    global template_file_name
+    global template_content
+    
+    try:
+        template_file = open(template_file_name)
+    except:
+        print("failed to open template file")
+    template_content = template_file.read()
+    template_file.close()
+
+def load_tags(text):
+    global tags
+
+    matches = re.split(r"<<", text)
+    matches.pop(0) #remove any text prior to the first tag
+    for match in matches:
+        tag_string = match.split(r">>")[0]
+        tag = Tag()
+        tag.set_string(r"<<" + tag_string + r">>")
+        tags.append(tag)
+        
+def find_tag_by_name(name):
+    global tags
+    
+    for tag in tags:
+        if tag.name == name:
+            return(tag)
+
+def replace_tags_text(text):
+    global tags
+    
+    new_text = text
+    for tag in tags:
+        new_text = new_text.replace(tag.text, tag.replacement_text)
+
+    return(new_text)
+
+#-----------Tag Processing methods-----------------
+def generate_tags_replacement_text():
+    global tags
+
+    for tag in tags:
+        if tag.parts[0] == r"number":
+            generate_tag_replacement_number(tag)
+        elif tag.parts[0] == r"product":
+            generate_tag_replacement_product(tag)
+            
+def generate_tag_replacement_number(tag):
+    if tag.parts[1] == r"normal":
+        generate_tag_replacement_number_normal(tag)
+        return(tag)
+    elif tag.parts[1] == r"uniform":
+        generate_tag_replacement_number_uniform(tag)
+        return(tag)
+    elif tag.parts[1] == r"triangle":
+        generate_tag_replacement_number_triangle(tag)
+        return(tag)
+    
+def generate_tag_replacement_product(tag):
+    decimals = NULL
+    factors = []
+    calculated_value = NULL
+    
+    for part in tag.parts:
+        sections = part.split(r":")
+        if sections[0] == r"decimals":
+            decimals = int(sections[1])
+        elif sections[0] == r"product":
+            pass
+        else:
+            try:
+                factors.append(float(part))
+            except:
+                factor_tag = find_tag_by_name(part)
+                factors.append(factor_tag.value)
+
+    for factor in factors:
+        if calculated_value == NULL:
+            calculated_value = factor
+        else:
+            calculated_value *= factor
+
+    tag.value = calculated_value
+    tag.replacement_text = format_number(calculated_value, decimals)
+    
+    return(tag)
+    
+def generate_tag_replacement_number_normal(tag):
+    mean = NULL
+    standard_deviation = NULL
+    minimum = NULL
+    maximum = NULL
+    decimals = NULL
+    generated_number = NULL
+    in_range = False
+    
+    for part in tag.parts:
+        sections = part.split(r":")
+        if sections[0] == r"mean":
+            mean = float(sections[1])
+        if sections[0] == r"stddev":
+            standard_deviation = float(sections[1])
+        if sections[0] == r"min":
+            minimum = float(sections[1])
+        if sections[0] == r"max":
+            maximum = float(sections[1])
+        if sections[0] == r"decimals":
+            decimals = int(sections[1])
+
+    count = 0
+    while in_range == False:
+        generated_number = numpy.random.default_rng().normal(mean,standard_deviation,1)[0]
+        if between(generated_number, minimum, maximum):
+            in_range = True
+        if count == 1000:
+            print ( r"failed to generate random number within minimum & maximum range after %d tries." % count )
+            
+    tag.value = generated_number
+    tag.replacement_text = format_number(generated_number, decimals)
+    
+    return(tag)
+
+def generate_tag_replacement_number_uniform(tag):
+    minimum = NULL
+    maximum = NULL
+    decimals = NULL
+    generated_number = NULL
+    
+    for part in tag.parts:
+        sections = part.split(r":")
+        if sections[0] == r"min":
+            minimum = float(sections[1])
+        if sections[0] == r"max":
+            maximum = float(sections[1])
+        if sections[0] == r"decimals":
+            decimals = int(sections[1])
+
+    generated_number = numpy.random.default_rng().uniform(minimum,maximum,1)[0]
+
+    tag.value = generated_number
+    tag.replacement_text = format_number(generated_number, decimals)
+    
+    return(tag)
+
+def generate_tag_replacement_number_triangle(tag):
+    left = NULL
+    right = NULL
+    decimals = NULL
+    generated_number = NULL
+    
+    for part in tag.parts:
+        sections = part.split(r":")
+        if sections[0] == r"left":
+            left = float(sections[1])
+        if sections[0] == r"mode":
+            mode = float(sections[1])
+        if sections[0] == r"right":
+            right = float(sections[1])
+        if sections[0] == r"decimals":
+            decimals = int(sections[1])
+
+    generated_number = numpy.random.default_rng().triangular(left,mode,right,1)[0]
+
+    tag.value = generated_number
+    tag.replacement_text = format_number(generated_number, decimals)
+    
+    return(tag)
+
+
+#---------------MAIN-------------------
+for count in range(10):
+    new_input_file = monte_carlo(r"""
+porosity: <<porosity|number|uniform|mean:0.3|stddev:0.43|decimals:2|min:0|max:1>> percent.
+infiltration rate: <<infiltration|number|normal|mean:0.6|stddev:0.23|decimals:2|min:0|max:1>> percent.
+rainfall: <<rainfall|number|triangle|decimals:4|mode:142.34|left:70|right:170|>> mm/year
+flow rate: <<flow rate|product|infiltration|rainfall|porosity|decimals:1>> mm/year""")
+    print(new_input_file)    
