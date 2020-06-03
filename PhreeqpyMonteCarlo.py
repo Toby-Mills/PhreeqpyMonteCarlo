@@ -83,7 +83,7 @@ def monte_carlo(template_text):
     tags = []
     load_tags(template_text)
     generate_tags_replacement_text()
-    result = replace_tags_text(template_text)
+    result = replace_tags_by_text(template_text)
 
     return(result)
 
@@ -107,7 +107,10 @@ def load_tags(text):
         tag_string = match.split(r">>")[0]
         tag = Tag()
         tag.set_string(r"<<" + tag_string + r">>")
-        tags.append(tag)
+        if find_tag_by_name(tag.name) != None:
+            raise Exception(r"multiple tags with name '" + tag.name + "' were found. All tag names must be unique.")
+        else:
+            tags.append(tag)
         
 def find_tag_by_name(name):
     global tags
@@ -116,12 +119,21 @@ def find_tag_by_name(name):
         if tag.name == name:
             return(tag)
 
-def replace_tags_text(text):
+def replace_tags_by_text(text):
     global tags
     
     new_text = text
     for tag in tags:
         new_text = new_text.replace(tag.text, tag.replacement_text)
+
+    return(new_text)
+
+def replace_tags_by_name(text):
+    global tags
+    
+    new_text = text
+    for tag in tags:
+        new_text = new_text.replace(tag.name, tag.replacement_text)
 
     return(new_text)
 
@@ -132,9 +144,9 @@ def generate_tags_replacement_text():
     for tag in tags:
         if tag.parts[0] == r"number":
             generate_tag_replacement_number(tag)
-        elif tag.parts[0] == r"product":
-            generate_tag_replacement_product(tag)
-            
+        elif tag.parts[0] == r"calculation":
+            generate_tag_replacement_calculation(tag)
+
 def generate_tag_replacement_number(tag):
     if tag.parts[1] == r"normal":
         generate_tag_replacement_number_normal(tag)
@@ -145,36 +157,30 @@ def generate_tag_replacement_number(tag):
     elif tag.parts[1] == r"triangle":
         generate_tag_replacement_number_triangle(tag)
         return(tag)
+
+def generate_tag_replacement_calculation(tag):
     
-def generate_tag_replacement_product(tag):
     decimals = NULL
-    factors = []
-    calculated_value = NULL
-    
+
     for part in tag.parts:
         sections = part.split(r":")
         if sections[0] == r"decimals":
             decimals = int(sections[1])
-        elif sections[0] == r"product":
+        elif sections[0] == r"calculation":
             pass
         else:
-            try:
-                factors.append(float(part))
-            except:
-                factor_tag = find_tag_by_name(part)
-                factors.append(factor_tag.value)
+            expression = part
 
-    for factor in factors:
-        if calculated_value == NULL:
-            calculated_value = factor
-        else:
-            calculated_value *= factor
+    expression = replace_tags_by_name(expression)
+    try:
+        calculated_number = eval(expression)
+    except:
+        raise Exception(r"Failed to evaluate the calculation tag '" + tag.name + "'; Expression: '" + expression + "'; Please check syntax and variable names.")
 
-    tag.value = calculated_value
-    tag.replacement_text = format_number(calculated_value, decimals)
+    tag.replacement_text = format_number(calculated_number, decimals)
     
     return(tag)
-    
+
 def generate_tag_replacement_number_normal(tag):
     mean = NULL
     standard_deviation = NULL
