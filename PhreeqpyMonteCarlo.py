@@ -8,9 +8,9 @@ import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
 
 #-----------Setttings-----------------#
 #------- Edit as needed --------------#
-template_file_name = r"C:\\Temp\\PhreeqpyMonteCarlo\\template.pqi"
+template_file_name = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\template.pqi"
 
-generated_file_directory = r"C:\\Temp\\PhreeqpyMonteCarlo\\input\\"
+generated_file_directory = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\input\\"
 generated_file_name = "model_name_"
 generated_file_extension = "pqi"
 

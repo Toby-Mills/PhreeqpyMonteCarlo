@@ -5,10 +5,10 @@ from os import walk
 
 #-----------Setttings-----------------#
 #------- Edit as needed --------------#
-phreeq_database = r"C:\\Temp\\PhreeqpyMonteCarlo\\phreeqc.dat"
-input_file_folder = r"C:\\Temp\\PhreeqpyMonteCarlo\\input\\"
+phreeq_database = r"C:\\Program Files (x86)\\USGS\\Phreeqc Interactive 3.6.2-15100\\database\\phreeqc.dat"
+input_file_folder = r"C:\Personal\\Development\\PhreeqpyMonteCarlo\\example\\input\\"
 
-output_file_folder = r"C:\\Temp\\PhreeqpyMonteCarlo\\output\\"
+output_file_folder = r"C:\Personal\\Development\\PhreeqpyMonteCarlo\\example\\output\\"
 output_file_extension = r"txt"
 
 
@@ -43,7 +43,7 @@ def execute_input_file(input_file_name, output_file_name):
 
     phreeqc = phreeqc_module.IPhreeqc()
     phreeqc.create_iphreeqc()
-    phreeqc.load_database(phreeq_database)
+    #phreeqc.load_database(phreeq_database)
     input_file = open(input_file_name,"r")
     input_string =input_file.read()
     input_file.close()
