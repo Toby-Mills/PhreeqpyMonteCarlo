@@ -19,7 +19,16 @@ For example:
  ## number
  'number' is for random numbers. The next part of the tag is a choice alogorithm which is one of 'normal', 'uniform', and 'triangle".
  Each algorithm has a set of available parameters, which are provided in the subsequent parts of the tag.
- ### number | normal
+ ### number | lognormal
+ 'lognormal' is a random number from a log normal distribution. The remaining parts of the tag provide the following parameters:
+ - 'mean' - the mean of the distribution
+ - 'sigma' - the sigma value of the distribution
+ - 'min' - minimum value (e.g. where values must be positive, set min to zero)
+ - 'max' - maximum values (e.g where values are a percentage, set max to 100)
+ - 'decimals' - the number of decimal places to include
+ 
+ *example: <<pH|number|normal|mean:7.052|stddev:1.303|min:0|max:14|decimals:3>>*
+  ### number | normal
  'normal' is a random number from a normal distribution. The remaining parts of the tag provide the following parameters:
  - 'mean' - the mean of the distribution
  - 'stddev' - the standard deviation of the distribution

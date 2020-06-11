@@ -151,6 +151,9 @@ def generate_tag_replacement_number(tag):
     if tag.parts[1] == r"normal":
         generate_tag_replacement_number_normal(tag)
         return(tag)
+    elif tag.parts[1] == r"lognormal":
+        generate_tag_replacement_number_normal(tag)
+        return(tag)
     elif tag.parts[1] == r"uniform":
         generate_tag_replacement_number_uniform(tag)
         return(tag)
@@ -206,6 +209,41 @@ def generate_tag_replacement_number_normal(tag):
     count = 0
     while in_range == False:
         generated_number = numpy.random.default_rng().normal(mean,standard_deviation,1)[0]
+        if between(generated_number, minimum, maximum):
+            in_range = True
+        if count == 1000:
+            print ( r"failed to generate random number within minimum & maximum range after %d tries." % count )
+            
+    tag.value = generated_number
+    tag.replacement_text = format_number(generated_number, decimals)
+    
+    return(tag)
+
+def generate_tag_replacement_number_lognormal(tag):
+    mean = NULL
+    sigma = NULL
+    minimum = NULL
+    maximum = NULL
+    decimals = NULL
+    generated_number = NULL
+    in_range = False
+    
+    for part in tag.parts:
+        sections = part.split(r":")
+        if sections[0] == r"mean":
+            mean = float(sections[1])
+        if sections[0] == r"sigma":
+            sigma = float(sections[1])
+        if sections[0] == r"min":
+            minimum = float(sections[1])
+        if sections[0] == r"max":
+            maximum = float(sections[1])
+        if sections[0] == r"decimals":
+            decimals = int(sections[1])
+
+    count = 0
+    while in_range == False:
+        generated_number = numpy.random.default_rng().lognormal(mean,sigma,1)[0]
         if between(generated_number, minimum, maximum):
             in_range = True
         if count == 1000:
