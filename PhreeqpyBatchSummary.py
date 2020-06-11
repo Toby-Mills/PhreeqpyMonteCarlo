@@ -239,4 +239,8 @@ def summarise_results():
     result_file.close()
 
 #---------------MAIN-------------------
-summarise_results()
+def main():
+    summarise_results()
+
+if __name__ == '__main__':
+    main()

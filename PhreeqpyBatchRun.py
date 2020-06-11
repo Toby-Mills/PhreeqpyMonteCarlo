@@ -63,7 +63,10 @@ def execute_input_file(input_file_name, output_file_name):
     output_file.close()
 
 #---------------MAIN-------------------
- 
-load_input_file_names()
-for input_file_name in input_file_names:
-    execute_input_file(input_file_folder + input_file_name, output_file_folder + input_file_name)
+def main():
+    load_input_file_names()
+    for input_file_name in input_file_names:
+        execute_input_file(input_file_folder + input_file_name, output_file_folder + input_file_name)
+
+if __name__ == '__main__':
+    main()

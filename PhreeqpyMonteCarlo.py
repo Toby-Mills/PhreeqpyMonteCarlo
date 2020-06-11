@@ -264,9 +264,14 @@ def generate_tag_replacement_number_triangle(tag):
 
 
 #---------------MAIN-------------------
-load_template()
-for count in range(10):
-    new_file_content = monte_carlo(template_content)
-    new_file = create_new_file(generated_file_directory + generated_file_name + "%d" % count + "." + generated_file_extension)
-    new_file.write(new_file_content)
-    new_file.close()
+def main():
+    load_template()
+    for count in range(10):
+        new_file_content = monte_carlo(template_content)
+        new_file = create_new_file(generated_file_directory + generated_file_name + "%d" % count + "." + generated_file_extension)
+        new_file.write(new_file_content)
+        new_file.close()
+
+
+if __name__ == '__main__':
+    main()
