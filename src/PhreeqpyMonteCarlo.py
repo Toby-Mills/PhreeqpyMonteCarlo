@@ -94,7 +94,7 @@ def load_template():
     try:
         template_file = open(template_file_name)
     except:
-        print("failed to open template file")
+        raise Exception("failed to open template file '%s'" % template_file_name)
     template_content = template_file.read()
     template_file.close()
 
