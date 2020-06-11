@@ -3,17 +3,38 @@ import os
 import json
 
 #-----------Setttings-----------------#
-#------- Edit as needed --------------#
-result_file_directory = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\output\\"
-summary_file_directory = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\summary\\"
-summary_config_file_name = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\summary_config.json"
-summary_file_extension = "txt"
+result_file_directory = ""
+summary_file_directory = ""
+summary_config_file_name = ""
+summary_file_extension = ""
 
 #-----------Variables-----------------
 result_file_names = []
-summary_config = {}
+parameters = []
+summary_files = []
 
 #-----------File Methods-------------------------------
+#-----------File Methods-------------------------------
+def load_summmary_config():
+    global result_file_directory
+    global summary_file_directory
+    global summary_config_file_name
+    global summary_file_extension
+    global parameters
+    global summary_files
+
+    config_file = open(os.path.dirname(__file__) + "/PhreeqpyBatchSummary_config.json", "r")
+    summary_config = config_file.read()
+    summary_config = json.loads(summary_config)
+
+    result_file_directory = summary_config["result_file_directory"]
+    summary_file_directory  = summary_config["summary_file_directory"]
+    summary_config_file_name = summary_config["summary_config_file_name"]
+    summary_file_extension = summary_config["summary_file_extension"]
+
+    parameters = summary_config["parameters"]
+    summary_files = summary_config["summary_files"]
+
 def load_result_file_names():
     global result_file_names
 
@@ -21,25 +42,6 @@ def load_result_file_names():
     for (dirpath, dirnames, filenames) in os.walk(result_file_directory):
         result_file_names.extend(filenames)
         break
-
-def load_summmary_config():
-    global summary_config
-
-    config_file = open(summary_config_file_name, "r")
-    summary_config = config_file.read()
-    summary_config = json.loads(summary_config)
-    #summary_files = summary_config["summaryFiles"]
-    #for summary_file in summary_files:
-    #    row_filters = summary_file["rowFilters"]
-    #    for row_filter in row_filters:
-    #        print(row_filter["column"])
-    #        print(row_filter["value"])
-    #        print(row_filter["match"])
-    #params = summary_config["parameters"]
-    #for param in params:
-    #
-    # 
-    #     print(param)
 
 def open_result_file(file_name):
     try:
@@ -53,12 +55,13 @@ def open_result_file(file_name):
 def create_summary_file(summary_file_name):
     global summary_file_directory
     global summary_file_extension
+    global parameters
 
     try:
         file_name = summary_file_directory + summary_file_name + r"." + summary_file_extension
         summary_file = open(file_name, "w") #'w' will open the existing file & overwrite if it already exists, otherwise create new file
         summary_file.write("File")
-        for parameter in summary_config["parameters"]:
+        for parameter in parameters:
             summary_file.write("\t" + parameter)
     except:
         raise Exception(r"unable to create summary_file: " + file_name)
@@ -79,7 +82,7 @@ def open_summary_file(summary_file_name):
     return summary_file
 
 def summarise_result_file(result_file, summary_file, row_filters):
-    global summary_config
+    global parameters
 
     parameter_indices = []
     interpolation_index = -1
@@ -105,7 +108,7 @@ def summarise_result_file(result_file, summary_file, row_filters):
 
     #find the indices for the relevant columns
     #parameters to summarize, as well as row filters
-    for parameter in summary_config["parameters"]:  
+    for parameter in parameters:  
         found = False
         for heading_index in range(len(headings)):
             if parameter == headings[heading_index]:
@@ -217,6 +220,7 @@ def calculate_final_value(match_values, low_values, high_values, parameter_index
 
 def summarise_results():
     global result_file_names
+    global summary_files
 
     load_summmary_config()
     load_result_file_names()
@@ -225,8 +229,7 @@ def summarise_results():
     for result_file_name in result_file_names:
         print("summarising '%s'" % result_file_name)
         result_file = open_result_file(result_file_name)
-        summary_files_config = summary_config["summaryFiles"]
-        for summary_file_config in summary_files_config:
+        for summary_file_config in summary_files:
             if first_loop == True:
                 summary_file = create_summary_file(summary_file_config["name"])
             else:

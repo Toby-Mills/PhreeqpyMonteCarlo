@@ -1,0 +1,6 @@
+{
+    "phreeq_database": "C:\\Program Files (x86)\\USGS\\Phreeqc Interactive 3.6.2-15100\\database\\phreeqc.dat",
+    "input_file_folder": "C:\\Python\\PhreeqpyMonteCarlo\\example\\input\\",
+    "output_file_folder": "C:\\Python\\PhreeqpyMonteCarlo\\example\\output\\",
+    "output_file_extension": "txt"
+}

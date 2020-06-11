@@ -1,0 +1,24 @@
+{
+    "result_file_directory": "C:\\Python\\PhreeqpyMonteCarlo\\example\\output\\",
+    "summary_file_directory": "C:\\Python\\PhreeqpyMonteCarlo\\example\\summary\\",
+    "summary_config_file_name": "C:\\Python\\PhreeqpyMonteCarlo\\example\\summary_config.json",
+    "summary_file_extension": "txt",
+
+    "summary_files":[
+        {"name":"70_100",
+        "rowFilters":[
+            {"column": "soln", "value": "70.000", "match":"exact"},
+            {"column": "time", "value": 309155276, "match":"interpolate"}
+        ]},
+        {"name":"1_100",
+            "rowFilters":[
+                {"column": "soln", "value": "1.000", "match":"exact"},
+                {"column": "time", "value": 309155276, "match":"interpolate"}
+        ]},
+        {"name":"70",
+            "rowFilters":[
+                {"column": "soln", "value": "70.000", "match":"exact"}
+        ]}
+    ],
+    "parameters":["soln", "time", "pH", "mu", "d_Calcite"]
+}

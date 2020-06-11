@@ -1,4 +1,6 @@
 #----------Imports-------------------
+import os
+import json
 from random import seed
 from random import random
 import numpy
@@ -6,14 +8,13 @@ from numpy.random import default_rng
 import re
 import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
 
+
 #-----------Setttings-----------------#
-#------- Edit as needed --------------#
-template_file_name = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\template.pqi"
-
-generated_file_directory = r"C:\\Personal\\Development\\PhreeqpyMonteCarlo\\example\\input\\"
-generated_file_name = "model_name_"
-generated_file_extension = "pqi"
-
+template_file_name =""
+generated_file_directory = ""
+generated_file_name = ""
+generated_file_extension = ""
+iterations = 0
 
 #-----------Constants-----------------
 NULL = -9999
@@ -25,6 +26,23 @@ template_content = ""
 generated_input_files = []
 generated_output_files = []
 
+#-----------File Methods-------------------------------
+def load_summmary_config():
+    global template_file_name
+    global generated_file_directory
+    global generated_file_name
+    global generated_file_extension
+    global iterations
+
+    config_file = open(os.path.dirname(__file__) + "/PhreeqpyMonteCarlo_config.json", "r")
+    summary_config = config_file.read()
+    summary_config = json.loads(summary_config)
+
+    template_file_name = summary_config["template_file_name"]
+    generated_file_directory  = summary_config["generated_file_directory"]
+    generated_file_name = summary_config["generated_file_name"]
+    generated_file_extension = summary_config["generated_file_extension"]
+    iterations = summary_config["iterations"]
 
 #-----------Class Tag-----------------
 class Tag:
@@ -300,16 +318,18 @@ def generate_tag_replacement_number_triangle(tag):
     
     return(tag)
 
-
-#---------------MAIN-------------------
-def main():
+def generate_files():
+    load_summmary_config()
     load_template()
-    for count in range(10):
+    for count in range(iterations):
         new_file_content = monte_carlo(template_content)
         new_file = create_new_file(generated_file_directory + generated_file_name + "%d" % count + "." + generated_file_extension)
         new_file.write(new_file_content)
         new_file.close()
 
+#---------------MAIN-------------------
+def main():
+    generate_files()
 
 if __name__ == '__main__':
     main()

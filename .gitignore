@@ -124,5 +124,8 @@ dmypy.json
 
 phreeqc.dat
 /example
+PhreeqpyMonteCarlo_config.json
+PhreeqpyBatchRun_config.json
+PhreeqpyBatchSummary_config.json
 
 .vscode/launch.json

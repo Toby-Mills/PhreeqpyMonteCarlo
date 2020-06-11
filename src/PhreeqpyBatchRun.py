@@ -1,16 +1,14 @@
 #----------Imports-------------------
-
+import os
+import json
 import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
 from os import walk
 
 #-----------Setttings-----------------#
-#------- Edit as needed --------------#
-phreeq_database = r"C:\\Program Files (x86)\\USGS\\Phreeqc Interactive 3.6.2-15100\\database\\phreeqc.dat"
-input_file_folder = r"C:\Personal\\Development\\PhreeqpyMonteCarlo\\example\\input\\"
-
-output_file_folder = r"C:\Personal\\Development\\PhreeqpyMonteCarlo\\example\\output\\"
-output_file_extension = r"txt"
-
+phreeq_database = ""
+input_file_folder = ""
+output_file_folder = ""
+output_file_extension = ""
 
 #-----------Constants-----------------
 
@@ -20,6 +18,21 @@ input_file_names = []
 generated_output_files = []
 
 #-----------File Methods-------------------------------
+def load_summmary_config():
+    global phreeq_database
+    global input_file_folder
+    global output_file_folder
+    global output_file_extension
+
+    config_file = open(os.path.dirname(__file__) + "/PhreeqpyBatchRun_config.json", "r")
+    summary_config = config_file.read()
+    summary_config = json.loads(summary_config)
+
+    phreeq_database = summary_config["phreeq_database"]
+    input_file_folder  = summary_config["input_file_folder"]
+    output_file_folder = summary_config["output_file_folder"]
+    output_file_extension = summary_config["output_file_extension"]
+
 def write_line(open_file, text):
     open_file.write(text)
     open_file.write("\n")
@@ -64,6 +77,7 @@ def execute_input_file(input_file_name, output_file_name):
 
 #---------------MAIN-------------------
 def main():
+    load_summmary_config()
     load_input_file_names()
     for input_file_name in input_file_names:
         execute_input_file(input_file_folder + input_file_name, output_file_folder + input_file_name)
