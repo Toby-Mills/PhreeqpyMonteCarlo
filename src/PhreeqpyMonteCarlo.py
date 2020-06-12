@@ -27,7 +27,7 @@ generated_input_files = []
 generated_output_files = []
 
 #-----------File Methods-------------------------------
-def load_summmary_config():
+def load_config():
     global template_file_name
     global generated_file_folder
     global generated_file_name
@@ -170,7 +170,7 @@ def generate_tag_replacement_number(tag):
         generate_tag_replacement_number_normal(tag)
         return(tag)
     elif tag.parts[1] == r"lognormal":
-        generate_tag_replacement_number_normal(tag)
+        generate_tag_replacement_number_lognormal(tag)
         return(tag)
     elif tag.parts[1] == r"uniform":
         generate_tag_replacement_number_uniform(tag)
@@ -247,6 +247,7 @@ def generate_tag_replacement_number_lognormal(tag):
     in_range = False
     
     for part in tag.parts:
+        print(part)
         sections = part.split(r":")
         if sections[0] == r"mean":
             mean = float(sections[1])
@@ -261,6 +262,8 @@ def generate_tag_replacement_number_lognormal(tag):
 
     count = 0
     while in_range == False:
+        print("sigma")
+        print(sigma)
         generated_number = numpy.random.default_rng().lognormal(mean,sigma,1)[0]
         if between(generated_number, minimum, maximum):
             in_range = True
@@ -319,11 +322,11 @@ def generate_tag_replacement_number_triangle(tag):
     return(tag)
 
 def generate_files():
-    load_summmary_config()
+    load_config()
     load_template()
     for count in range(iterations):
         new_file_content = monte_carlo(template_content)
-        new_file = create_new_file(generated_file_directory + generated_file_name + "%d" % count + "." + generated_file_extension)
+        new_file = create_new_file(generated_file_folder + generated_file_name + "%d" % count + "." + generated_file_extension)
         new_file.write(new_file_content)
         new_file.close()
 

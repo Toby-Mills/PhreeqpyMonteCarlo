@@ -18,7 +18,7 @@ input_file_names = []
 generated_output_files = []
 
 #-----------File Methods-------------------------------
-def load_summmary_config():
+def load_config():
     global phreeq_database
     global input_file_folder
     global output_file_folder
@@ -77,7 +77,7 @@ def execute_input_file(input_file_name, output_file_name):
 
 #---------------MAIN-------------------
 def main():
-    load_summmary_config()
+    load_config()
     load_input_file_names()
     for input_file_name in input_file_names:
         execute_input_file(input_file_folder + input_file_name, output_file_folder + input_file_name)

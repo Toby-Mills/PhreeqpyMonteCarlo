@@ -14,7 +14,7 @@ summary_files = []
 
 #-----------File Methods-------------------------------
 #-----------File Methods-------------------------------
-def load_summmary_config():
+def load_config():
     global result_file_directory
     global summary_file_directory
     global summary_file_extension
@@ -72,7 +72,6 @@ def open_summary_file(summary_file_name):
     try:
         file_name = summary_file_directory + summary_file_name + r"." + summary_file_extension
         summary_file = open(file_name, "a") #'a' will open the existing file & append if it already exists, otherwise create new file
-        summary_file.write("File")
     except:
         raise Exception(r"unable to create summary_file: " + file_name)
 
@@ -171,6 +170,8 @@ def summarise_result_file(result_file, summary_file, row_filters):
                 match_high_values = values
             if match == "true" and match_low == "untested" and match_high == "untested":
                 match_values = values
+        if len(row_filters) == 0:
+            match_values = values
 
     summary_file.write("\n")
     summary_file.write(os.path.basename(result_file.name))
@@ -219,7 +220,7 @@ def summarise_results():
     global result_file_names
     global summary_files
 
-    load_summmary_config()
+    load_config()
     load_result_file_names()
     
     first_loop = True
