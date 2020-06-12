@@ -5,7 +5,6 @@ import json
 #-----------Setttings-----------------#
 result_file_directory = ""
 summary_file_directory = ""
-summary_config_file_name = ""
 summary_file_extension = ""
 
 #-----------Variables-----------------
@@ -18,7 +17,6 @@ summary_files = []
 def load_summmary_config():
     global result_file_directory
     global summary_file_directory
-    global summary_config_file_name
     global summary_file_extension
     global parameters
     global summary_files
@@ -29,7 +27,6 @@ def load_summmary_config():
 
     result_file_directory = summary_config["result_file_directory"]
     summary_file_directory  = summary_config["summary_file_directory"]
-    summary_config_file_name = summary_config["summary_config_file_name"]
     summary_file_extension = summary_config["summary_file_extension"]
 
     parameters = summary_config["parameters"]

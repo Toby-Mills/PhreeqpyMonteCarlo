@@ -1,7 +1,6 @@
 {
     "result_file_directory": "C:\\Python\\PhreeqpyMonteCarlo\\example\\output\\",
     "summary_file_directory": "C:\\Python\\PhreeqpyMonteCarlo\\example\\summary\\",
-    "summary_config_file_name": "C:\\Python\\PhreeqpyMonteCarlo\\example\\summary_config.json",
     "summary_file_extension": "txt",
 
     "summary_files":[
