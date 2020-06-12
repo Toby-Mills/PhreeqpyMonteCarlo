@@ -11,7 +11,7 @@ import phreeqpy.iphreeqc.phreeqc_dll as phreeqc_module
 
 #-----------Setttings-----------------#
 template_file_name =""
-generated_file_directory = ""
+generated_file_folder = ""
 generated_file_name = ""
 generated_file_extension = ""
 iterations = 0
@@ -29,7 +29,7 @@ generated_output_files = []
 #-----------File Methods-------------------------------
 def load_summmary_config():
     global template_file_name
-    global generated_file_directory
+    global generated_file_folder
     global generated_file_name
     global generated_file_extension
     global iterations
@@ -39,7 +39,7 @@ def load_summmary_config():
     summary_config = json.loads(summary_config)
 
     template_file_name = summary_config["template_file_name"]
-    generated_file_directory  = summary_config["generated_file_directory"]
+    generated_file_folder  = summary_config["generated_file_folder"]
     generated_file_name = summary_config["generated_file_name"]
     generated_file_extension = summary_config["generated_file_extension"]
     iterations = summary_config["iterations"]

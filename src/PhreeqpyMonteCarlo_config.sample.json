@@ -1,6 +1,6 @@
 {
     "template_file_name": "C:\\Python\\PhreeqpyMonteCarlo\\example\\template.pqi",
-    "generated_file_directory": "C:\\Python\\PhreeqpyMonteCarlo\\example\\input\\",
+    "generated_file_folder": "C:\\Python\\PhreeqpyMonteCarlo\\example\\input\\",
     "generated_file_name": "model_name_",
     "generated_file_extension": "pqi",
     "iterations": 10
