@@ -18,7 +18,7 @@ The config file for this package is named *'PhreeqpyMonteCarlo_config.json'*. Th
 - **iterations** : the number of files to be generated
 
 ## Template file
-The template template is a standard PhreeqC input file (a text file with a '.pqi' extension) except that it uses tags to indicate where random numbers should be inserted, as well as the parameters for the random number generator.
+The template is a standard PhreeqC input file (a text file with a '.pqi' extension) except that it uses tags to indicate where random numbers should be inserted, as well as the parameters for the random number generator.
 
 Each tag starts with *'<<'* and ends with *'>>'*
 For example:
