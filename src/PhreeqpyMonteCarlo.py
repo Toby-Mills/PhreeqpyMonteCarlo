@@ -247,7 +247,6 @@ def generate_tag_replacement_number_lognormal(tag):
     in_range = False
     
     for part in tag.parts:
-        print(part)
         sections = part.split(r":")
         if sections[0] == r"mean":
             mean = float(sections[1])
@@ -262,8 +261,6 @@ def generate_tag_replacement_number_lognormal(tag):
 
     count = 0
     while in_range == False:
-        print("sigma")
-        print(sigma)
         generated_number = numpy.random.default_rng().lognormal(mean,sigma,1)[0]
         if between(generated_number, minimum, maximum):
             in_range = True
