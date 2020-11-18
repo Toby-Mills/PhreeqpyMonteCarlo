@@ -53,27 +53,33 @@ def load_input_file_names():
 #-----------Phreeq Methods-------------------------------
 def execute_input_file(input_file_name, output_file_name):
     global phreeq_database
+    success = False
 
     phreeqc = phreeqc_module.IPhreeqc()
     phreeqc.create_iphreeqc()
-    #phreeqc.load_database(phreeq_database)
+    phreeqc.load_database(phreeq_database)
     input_file = open(input_file_name,"r")
     input_string =input_file.read()
     input_file.close()
-    phreeqc.run_string(input_string)
-                            
-    output = phreeqc.get_selected_output_array()
-    output_file = open(output_file_name, "x")
-    for line in range(len(output)):
-        for column in range(len(output[line])):
-            output_value = output[line][column]
-            try: 
-                output_file.write("%.3f"%output_value)
-            except:
-                output_file.write(output_value)
-            output_file.write("\t")
-        output_file.write("\n")
-    output_file.close()
+    try:
+        phreeqc.run_string(input_string)
+        success = True
+    except:
+        print ( r"phreeqc failed to run the input file '" + input_file_name + "'." )
+
+    if success == True:                 
+        output = phreeqc.get_selected_output_array()
+        output_file = open(output_file_name, "x")
+        for line in range(len(output)):
+            for column in range(len(output[line])):
+                output_value = output[line][column]
+                try: 
+                    output_file.write("%.3f"%output_value)
+                except:
+                    output_file.write(output_value)
+                output_file.write("\t")
+            output_file.write("\n")
+        output_file.close()
 
 #---------------MAIN-------------------
 def main():
