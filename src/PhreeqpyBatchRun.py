@@ -50,6 +50,15 @@ def load_input_file_names():
         break
     print(input_file_names)
 
+def output_file_name(input_file_name, output_file_extension):
+    new_file_name = ""
+    file_name_parts = input_file_name.split(r".")
+    file_name_parts.pop(len(file_name_parts) - 1)
+    new_file_name = ".".join(file_name_parts)
+    new_file_name = new_file_name + "." + output_file_extension
+
+    return new_file_name
+
 #-----------Phreeq Methods-------------------------------
 def execute_input_file(input_file_name, output_file_name):
     global phreeq_database
@@ -86,7 +95,7 @@ def main():
     load_config()
     load_input_file_names()
     for input_file_name in input_file_names:
-        execute_input_file(input_file_folder + input_file_name, output_file_folder + input_file_name)
+        execute_input_file(input_file_folder + input_file_name, output_file_folder + output_file_name(input_file_name, output_file_extension))
 
 if __name__ == '__main__':
     main()
