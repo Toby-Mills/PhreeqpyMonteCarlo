@@ -83,7 +83,7 @@ def execute_input_file(input_file_name, output_file_name):
             for column in range(len(output[line])):
                 output_value = output[line][column]
                 try: 
-                    output_file.write("%.3f"%output_value)
+                    output_file.write("%.5E"%output_value)
                 except:
                     output_file.write(output_value)
                 output_file.write("\t")
