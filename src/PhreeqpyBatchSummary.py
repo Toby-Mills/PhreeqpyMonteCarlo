@@ -118,7 +118,7 @@ def summarise_result_file(result_file, summary_file, row_filters):
     for rowFilter in row_filters:
         found = False
         filter_parameter = rowFilter["column"]
-        print('row filter: %s = %s' % (filter_parameter, rowFilter["value"]))
+        #print('row filter: %s = %s' % (filter_parameter, rowFilter["value"]))
         for heading_index in range(len(headings)):
             if filter_parameter == headings[heading_index]:
                 rowFilter["index"] = heading_index
@@ -182,13 +182,13 @@ def summarise_result_file(result_file, summary_file, row_filters):
         else:
             final_value = calculate_final_value(match_values, match_low_values, match_high_values, parameter_index, interpolation_index, interpolation_value)
 
-        summary_file.write("\t%.3f" % final_value)
+        summary_file.write("\t%.5E" % final_value)
 
         
 def calculate_final_value(match_values, low_values, high_values, parameter_index, interpolation_index, interpolation_target_value):
     if len(match_values) > 0:
         final_value = float(match_values[parameter_index])
-        print("exact")
+        #print("exact")
     else:
         if len(low_values) == 0:
             raise Exception("No 'low' values provided for interpolation")
@@ -199,10 +199,10 @@ def calculate_final_value(match_values, low_values, high_values, parameter_index
         high_value = float(high_values[parameter_index])
         high_interpolation_value = float(high_values[interpolation_index])
 
-        print("low value: %.3f" % low_value)
-        print("high value: %.3f" % high_value)
-        print("low interpolation value: %.3f" % low_interpolation_value)
-        print("high interpolation value: %.3f" % high_interpolation_value)
+        #print("low value: %.3f" % low_value)
+        #print("high value: %.3f" % high_value)
+        #print("low interpolation value: %.3f" % low_interpolation_value)
+        #print("high interpolation value: %.3f" % high_interpolation_value)
 
         if low_interpolation_value == high_interpolation_value:
             final_value = high_value
@@ -211,8 +211,8 @@ def calculate_final_value(match_values, low_values, high_values, parameter_index
             step_value = (high_value - low_value) * step_percent
             final_value = low_value + step_value
 
-            print("step percent: %.3f" % step_percent)
-            print("step value: %3f" % step_value)
+            #print("step percent: %.3f" % step_percent)
+            #print("step value: %3f" % step_value)
 
     return final_value
 
@@ -232,7 +232,7 @@ def summarise_results():
                 summary_file = create_summary_file(summary_file_config["name"])
             else:
                 summary_file = open_summary_file(summary_file_config["name"])
-            print("updating summary file '%s'" % summary_file.name)
+            #print("updating summary file '%s'" % summary_file.name)
             row_filters = summary_file_config["rowFilters"]
             summarise_result_file(result_file, summary_file, row_filters)
         summary_file.close()
