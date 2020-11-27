@@ -177,12 +177,15 @@ def summarise_result_file(result_file, summary_file, row_filters):
     summary_file.write(os.path.basename(result_file.name))
 
     for parameter_index in parameter_indices:
-        if interpolation_index == -1:
-            final_value = float(match_values[parameter_index])
-        else:
-            final_value = calculate_final_value(match_values, match_low_values, match_high_values, parameter_index, interpolation_index, interpolation_value)
+        try:
+            if interpolation_index == -1:
+                final_value = float(match_values[parameter_index])
+            else:
+                final_value = calculate_final_value(match_values, match_low_values, match_high_values, parameter_index, interpolation_index, interpolation_value)
 
-        summary_file.write("\t%.5E" % final_value)
+            summary_file.write("\t%.5E" % final_value)
+        except Exception as ex:
+            summary_file.write("\t{}".format(ex))
 
         
 def calculate_final_value(match_values, low_values, high_values, parameter_index, interpolation_index, interpolation_target_value):
