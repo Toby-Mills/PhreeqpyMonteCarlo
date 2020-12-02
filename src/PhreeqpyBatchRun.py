@@ -64,6 +64,7 @@ def execute_input_file(input_file_name, output_file_name):
     global phreeq_database
     success = False
 
+    print(r"executing input file '" + input_file_name + "'." )
     phreeqc = phreeqc_module.IPhreeqc()
     phreeqc.create_iphreeqc()
     phreeqc.load_database(phreeq_database)
