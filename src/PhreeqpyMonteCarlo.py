@@ -324,6 +324,7 @@ def generate_files():
     for count in range(iterations):
         new_file_content = monte_carlo(template_content)
         new_file = create_new_file(generated_file_folder + generated_file_name + "%d" % count + "." + generated_file_extension)
+        print("generated file '" + new_file.name +"'")
         new_file.write(new_file_content)
         new_file.close()
 
